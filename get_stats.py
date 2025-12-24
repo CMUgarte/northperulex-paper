@@ -1,42 +1,49 @@
 from collections import defaultdict
-from pathlib import Path
 from lingpy import Wordlist
 from lingpy.compare.sanity import average_coverage, mutual_coverage
 from tabulate import tabulate
 
-path = Path(".")
+
 wl = Wordlist.from_cldf(
-	"../cldf/cldf-metadata.json",
+	"northperulex/cldf/cldf-metadata.json",
 	columns=(
-		"concept_id",
+		"parameter_id",
 		"language_id",
-		"concept_name",
-		"language_name",
+		"name",
 		"value",
 		"segments",
 		"form",
 		"glottocode",
-		"concept_concepticon_ide",
+		"concepticon_id",
 		"source",
-		"language_subgroup"
+		"subgroup"
 	),
 	namespace=(
 		("language_id", "doculect"),
-		("language_subgroup", "subgroup"),
-		("concept_name", "concept"),
+		("subgroup", "subgroup"),
+		("name", "concept"),
 		("segments", "tokens"),
+		("forms", "forms"),
 		("cognacy", "cogid"),
-		("source", "source")
+		("partial_cognacy", "cogids"),
+		("source", "source"),
+		("glottocode", "glottocode")
 	)
 )
 
-lang_count = defaultdict(int)
-total_concepts = len(set(wl.get_list("concept", flat=True)))
 
-for item in wl:
-	lang = wl[item, "doculect"]
+lang_count = defaultdict(int)
+concepts = set()
+
+for idx in wl:
+	lang = wl[idx, "doculect"]
 	lang_count[lang] = lang_count[lang] + 1
-	
+	concepts.add(wl[idx, "parameter_id"])
+
+total_concepts = len(concepts)
+print(f"Total number of concepts: {total_concepts}")
+print(f"Total number of languages: {len(lang_count)}")
+
 table_data = []
 covs_total = 0
 
@@ -45,21 +52,21 @@ for lang in sorted(lang_count.keys()):
 	coverage_pctg = round((lang_count[lang] / total_concepts) * 100, 1)
 	covs_total += coverage_pctg
 	
-	indices = wl.get_list(col=lang, flat=True)
-	if indices:
-		idx = indices[0]
-		lang_name = wl[idx, "language_name"]
-		glottocode = wl[idx, "glottocode"]
-		subgroup = wl[idx, "subgroup"]
-		source = wl[idx, "source"]
-		
-		table_data.append([
-			lang_name,
-			glottocode,
-			subgroup,
-			source,
-			f"{lang_count[lang]} ({coverage_pctg}%)"
-		])
+	for idx in wl:
+		if wl[idx, "doculect"] == lang:
+			lang_name = lang
+			glottocode = wl[idx, "glottocode"]
+			subgroup = wl[idx, "subgroup"]
+			source = wl[idx, "source"]
+			
+			table_data.append([
+				lang_name,
+				glottocode,
+				subgroup,
+				source,
+				f"{lang_count[lang]} ({coverage_pctg}%)"
+			])
+			break
 		
 table = tabulate(
 	table_data,
