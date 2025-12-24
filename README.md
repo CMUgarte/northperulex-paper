@@ -11,7 +11,6 @@ Please install all the necessary Python packages in a new virtual environment
 by running the following commands:
 
 ```shell
-pip install -e lingreg/
 pip install -r requirements.txt
 ```
 
