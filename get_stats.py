@@ -7,71 +7,79 @@ from tabulate import tabulate
 wl = Wordlist.from_cldf(
 	"northperulex/cldf/cldf-metadata.json",
 	columns=(
-		"parameter_id",
 		"language_id",
-		"name",
-		"value",
+		"language_glottocode",
+		"language_glottolog_name",
+		"language_subgroup",
+		"parameter_id",
 		"segments",
 		"form",
-		"glottocode",
-		"concepticon_id",
-		"source",
-		"subgroup"
+		"source"
 	),
 	namespace=(
 		("language_id", "doculect"),
-		("subgroup", "subgroup"),
-		("name", "concept"),
+		("language_glottocode", "glottocode"),
+		("language_glottolog_name", "glottolog_name"),
+		("language_subgroup", "subgroup"),
+		("parameter_id", "concept"),
 		("segments", "tokens"),
-		("forms", "forms"),
-		("cognacy", "cogid"),
-		("partial_cognacy", "cogids"),
-		("source", "source"),
-		("glottocode", "glottocode")
+		("form", "form"),
+		("source", "source")
 	)
 )
 
+print("Columns in wordlist:", wl.columns)
+print(f"Number of entries: {len(wl)}")
+print(f"Number of languages: {wl.width}")
+print(f"Number of concepts: {wl.height}")
+
+total_concepts = wl.height
 
 lang_count = defaultdict(int)
-concepts = set()
+for idx in wl:
+	lang = wl[idx, "doculect"]
+	lang_count[lang] += 1
+
+table_data = []
+lang_metadata = {}
 
 for idx in wl:
 	lang = wl[idx, "doculect"]
-	lang_count[lang] = lang_count[lang] + 1
-	concepts.add(wl[idx, "parameter_id"])
-
-total_concepts = len(concepts)
-print(f"Total number of concepts: {total_concepts}")
-print(f"Total number of languages: {len(lang_count)}")
-
-table_data = []
-covs_total = 0
-
-for lang in sorted(lang_count.keys()):
-	# Calculate coverage percentage
-	coverage_pctg = round((lang_count[lang] / total_concepts) * 100, 1)
-	covs_total += coverage_pctg
-	
-	for idx in wl:
-		if wl[idx, "doculect"] == lang:
-			lang_name = lang
-			glottocode = wl[idx, "glottocode"]
-			subgroup = wl[idx, "subgroup"]
-			source = wl[idx, "source"]
-			
-			table_data.append([
-				lang_name,
-				glottocode,
-				subgroup,
-				source,
-				f"{lang_count[lang]} ({coverage_pctg}%)"
-			])
-			break
+	if lang not in lang_metadata:
+		glottocode = wl[idx, "glottocode"]
+		glottoname = wl[idx, "glottolog_name"]
+		subgroup = wl[idx, "subgroup"]
+		source = wl[idx, "source"]
 		
+		lang_metadata[lang] = {
+			"glottocode": glottocode,
+			"glottoname": glottoname,
+			"subgroup": subgroup,
+			"source": source
+		}
+	
+for lang in sorted(lang_count.keys()):
+	coverage = round(lang_count[lang] / total_concepts, 3)
+	metadata = lang_metadata[lang]
+	
+	source = metadata["source"]
+	if isinstance(source, list):
+		source = ", ".join(sorted(set(source)))
+	
+	table_data.append([
+		lang,
+		metadata["glottoname"],
+		metadata["glottocode"],
+		metadata["subgroup"],
+		source,
+		f"{coverage:.2f}"
+	])
+	
 table = tabulate(
 	table_data,
 	headers=[
-		"Language",
+		"Variety",
+		"Glottolog Name",
 		"Glottocode",
 		"Language Family",
 		"Sources",
@@ -81,13 +89,3 @@ table = tabulate(
 )
 
 print(table)
-
-avg_coverage = round(covs_total / len(lang_count), 2)
-avg_mutualcov = average_coverage(wl)
-
-print(f"Average coverage: {avg_coverage}%")
-print(f"Average mutual coverage: {avg_mutualcov:2f}")
-
-for i in range(total_concepts, 0, -1):
-	if mutual_coverage(wl, i):
-		print(f"Minimal mutual coverage: {i} concept pairs")
