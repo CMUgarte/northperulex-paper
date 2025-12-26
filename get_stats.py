@@ -125,10 +125,10 @@ table = tabulate(
 		"Glottocode",
 		"Family",
 		"Sources",
-		"Forms",
-		"Concepts",
-		"Synonymy",
-		"Coverage"
+		"W",
+		"C",
+		"Syn",
+		"Cov"
 	],
 	tablefmt="latex"
 )
