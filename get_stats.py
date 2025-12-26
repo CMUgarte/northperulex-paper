@@ -66,14 +66,18 @@ for idx in wl:
 		}
 
 table_data = []
+syn_values = []
+cov_values = []
 
 for lang in sorted(lang_forms.keys()):
 	forms_count = lang_forms[lang]
 	concepts_count = len(lang_concepts[lang])
 	
 	syn = round(forms_count / concepts_count, 2)
+	syn_values.append(syn)
 	
 	coverage = round(concepts_count / total_concepts, 3)
+	cov_values.append(coverage)
 	
 	metadata = lang_metadata[lang]
 	
@@ -94,8 +98,27 @@ for lang in sorted(lang_forms.keys()):
 	
 table_data.sort(key=lambda x: (-x[5], x[0]))
 
+# Totals
+total_languages = len(table_data)
+total_forms = sum(row[4] for row in table_data)
+avg_syn = round(sum(syn_values) / len(syn_values), 2)
+avg_cov = round(sum(cov_values) / len(cov_values), 2)
+
+summary_row = [
+	f"Overall: {total_languages}",
+	"",
+	"",
+	"",
+	total_forms,
+	"",
+	avg_syn,
+	f"{avg_cov:.2f}"
+]
+
+final_table = table_data + [summary_row]
+
 table = tabulate(
-	table_data,
+	final_table,
 	headers=[
 		"Variety",
 		#"Name",
