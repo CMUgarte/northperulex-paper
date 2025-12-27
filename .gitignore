@@ -5,6 +5,6 @@ northperulex/
 northperulex.tsv
 npl_patterns.tsv
 npl.nex
-npl2.nex
-npl2_dst.dst
+nplcore.nex
+nplcore_dst.dst
 npl_dst.dst
