@@ -7,5 +7,7 @@ preprocessing:
 stats:
 	python get_stats.py
 
-neighbornet:
-	python get_neighbornet.py
+neighbornets:
+	python get_dist.py
+	outline -a npl_dst.dst -n npl.nex
+	outline -a npl2_dst.dst -n npl2.nex

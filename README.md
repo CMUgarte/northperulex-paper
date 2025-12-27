@@ -30,5 +30,5 @@ make stats
 ### Reproduce neighborgnets
 
 ```shell
-make neighbornet
+make neighbornets
 ```

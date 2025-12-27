@@ -1,6 +1,5 @@
 from collections import defaultdict
 from lingpy import Wordlist
-from lingpy.compare.sanity import average_coverage, mutual_coverage
 from tabulate import tabulate
 
 
