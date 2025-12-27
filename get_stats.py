@@ -3,29 +3,7 @@ from lingpy import Wordlist
 from tabulate import tabulate
 
 
-wl = Wordlist.from_cldf(
-	"northperulex/cldf/cldf-metadata.json",
-	columns=(
-		"language_id",
-		"language_glottocode",
-		"language_glottolog_name",
-		"language_subgroup",
-		"parameter_id",
-		"segments",
-		"form",
-		"source"
-	),
-	namespace=(
-		("language_id", "doculect"),
-		("language_glottocode", "glottocode"),
-		("language_glottolog_name", "glottolog_name"),
-		("language_subgroup", "subgroup"),
-		("parameter_id", "concept"),
-		("segments", "tokens"),
-		("form", "form"),
-		("source", "source")
-	)
-)
+wl = Wordlist("northperulex.tsv")
 
 print("Columns in wordlist:", wl.columns)
 print(f"Number of entries: {len(wl)}")

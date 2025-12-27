@@ -27,8 +27,8 @@ make preprocessing
 make stats
 ```
 
-### Reproduce neighborgnets
+### Reproduce neighborgnet
 
 ```shell
-make neighbornets
+make neighbornet
 ```

@@ -7,7 +7,6 @@ preprocessing:
 stats:
 	python get_stats.py
 
-neighbornets:
+neighbornet:
 	python get_dist.py
 	outline -a npl_dst.dst -n npl.nex -o npl_neighbornet.png
-	outline -a nplcore_dst.dst -n nplcore.nex -o nplcore_neighbornet.png
