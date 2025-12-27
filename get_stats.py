@@ -1,3 +1,7 @@
+"""
+This script calculates basic statistics
+from the NorthPeruLex repository
+"""
 from collections import defaultdict
 from lingpy import Wordlist
 from tabulate import tabulate
