@@ -3,7 +3,8 @@ northperulex/
 
 # Data
 northperulex.tsv
-npl_patterns.tsv
-npl.nex
-npl_dst.dst
-npl_neighbornet.png
+npl-patterns.tsv
+npl-filtered.tsv
+distances.nex
+distances.dst
+neighbornet.png
