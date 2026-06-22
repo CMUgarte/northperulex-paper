@@ -9,4 +9,4 @@ stats:
 
 neighbornet:
 	python get_dist.py
-	outline -a npl.dst -n distances.nex -o neighbornet.png
+	outline -a distances.dst -n distances.nex -o neighbornet.png
